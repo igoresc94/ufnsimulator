@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EU Parliament Seats{% endblock %}
+
+{% block content %}
+<body>
+    <header>EU Parliament Distribution</header>
+
+    <div class="separatebutton">
+    <a href="{% url 'home' %}" class="btn">Back to Home</a> |
+    <a href="{% url 'check_parliament' %}"  class="btn">Check your Member State parliament</a>
+</div>
+
+
+    <h2>Previous EU Parliament Status</h2>
+
+    <table>
+        <tr>
+            <th>Party</th>
+            <th>Seats</th>
+        </tr>
+        {% for party, seats in parties %}
+        <tr>
+            <td>{{ party }}</td>
+            <td>{{ seats }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Current EU Parliament Status</h2>
+
+    <table>
+        <tr>
+            <th>Party</th>
+            <th>Seats</th>
+        </tr>
+        {% for party, seats in parties %}
+        <tr>
+            <td>{{ party }}</td>
+            <td>{{ seats }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+
+
+{% endblock %}
+

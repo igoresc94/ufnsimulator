@@ -1,0 +1,8 @@
+tr:nth-child(1) { color: white; } 
+tr:nth-child(2) { color: lightgreen; } 
+tr:nth-child(3) { color: lightgreen; ; } 
+tr:nth-child(4) { color:rgb(226, 234, 185); } 
+tr:nth-child(5) { color: rgb(226, 234, 185); } 
+tr:nth-child(6) { color: lightcoral; } 
+tr:nth-child(7) { color: lightcoral; } 
+tr:nth-child(8) { color: lightcoral; } 

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Insert Data{% endblock %}
+
+{% block content %}
+
+<body>
+    <header>Play with Data</header>
+<div class="separatebutton">
+    <a href="{% url 'home' %}" class="btn">Back to Home</a>
+</div>
+
+    <h2>Insert Fake News Impact Data</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="country">Select Country:</label>
+        <select id="country" name="country">
+            <option value="">-- Select a Country --</option>
+            {% for country in countries %}
+                <option value="{{ country.id }}">{{ country.name }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="sector">Select Sector:</label>
+        <select id="sector" name="sector">
+            <option value="">-- Select a Sector --</option>
+            {% for sector in sectors %}
+                <option value="{{ sector.id }}">{{ sector.name }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="fake_news">Select Fake News Technique:</label>
+        <select id="fake_news" name="fake_news">
+            <option value="">-- Select a Fake News Technique --</option>
+            {% for technique in fake_news_techniques %}
+                <option value="{{ technique.id }}">{{ technique.name }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="counter_fake_news">Select Counter Fake News Technique:</label>
+        <select id="counter_fake_news" name="counter_fake_news">
+            <option value="">-- Select a Counter Fake News Technique --</option>
+            {% for counter_technique in counter_disinfo_techniques %}
+                <option value="{{ counter_technique.id }}">{{ counter_technique.name }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <button type="submit" class="btn">Submit</button>
+    </form>
+
+</body>
+
+{% endblock %}
+
