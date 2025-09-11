@@ -5,7 +5,7 @@ class Command(BaseCommand):
     help = 'Load initial SQL data'
 
     def handle(self, *args, **kwargs):
-        file_path = os.path.join(base_dir, 'data', 'eu_fake_news_db_with_data.sql')
+        file_path = 'data/eu_fake_news_db_with_data.sql'
         with open(file_path, 'r') as sql_file:
             sql_script = sql_file.read()
 

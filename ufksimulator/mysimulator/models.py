@@ -26,3 +26,12 @@ class EU_Parliament_Seats(models.Model):
     class Meta:
         managed = False
         db_table = "EU_Parliament_Seats"
+
+class Post(models.Model):
+    country = models.CharField(max_length=100)
+    sector = models.CharField(max_length=100)
+    fake_news_technique = models.CharField(max_length=100)
+    counter_fake_news_technique = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)

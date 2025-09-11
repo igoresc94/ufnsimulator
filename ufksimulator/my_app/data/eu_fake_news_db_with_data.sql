@@ -7,7 +7,7 @@ CREATE TABLE EU_Countries (
 -- Insert EU Countries
 INSERT INTO EU_Countries (name) VALUES
 ('Austria'), ('Belgium'), ('Bulgaria'), ('Croatia'), ('Cyprus'), ('Czech Republic'),
-('Denmark'), ('Estonia'), ('Finland'), ('France'), ('Germany'), ('Greece'), ('Hungary'),
+('Denmark'), ('Estonia'), ('Finland'), ('France'), ('Germany'), ('Greece'), ('Hongary'),
 ('Ireland'), ('Italy'), ('Latvia'), ('Lithuania'), ('Luxembourg'), ('Malta'),
 ('Netherlands'), ('Poland'), ('Portugal'), ('Romania'), ('Slovakia'), ('Slovenia'), ('Spain'), ('Sweden');
 
@@ -55,7 +55,7 @@ VALUES
 ((SELECT id FROM EU_Countries WHERE name = 'Netherlands'), 4, 6, 7, 3, 3, 4, 1, 0, 28),
 ((SELECT id FROM EU_Countries WHERE name = 'Belgium'), 4, 3, 3, 3, 0, 3, 1, 0, 17),
 ((SELECT id FROM EU_Countries WHERE name = 'Greece'), 8, 2, 4, 1, 2, 0, 1, 0, 18),
-((SELECT id FROM EU_Countries WHERE name = 'Hungary'), 13, 0, 0, 0, 0, 0, 0, 1, 14),
+((SELECT id FROM EU_Countries WHERE name = 'Hongary'), 13, 0, 0, 0, 0, 0, 0, 1, 14),
 ((SELECT id FROM EU_Countries WHERE name = 'Portugal'), 6, 9, 2, 0, 1, 0, 1, 0, 19),
 ((SELECT id FROM EU_Countries WHERE name = 'Sweden'), 4, 5, 3, 2, 0, 3, 1, 0, 18),
 ((SELECT id FROM EU_Countries WHERE name = 'Austria'), 7, 5, 1, 2, 0, 3, 0, 0, 18),
@@ -464,3 +464,15 @@ VALUES
         (SELECT id FROM Counter_Disinfo_Techniques WHERE name = 'Algorithm Transparency'),
         'Requiring platforms to disclose how they promote certain content, though this has no immediate direct impact on combating military disinformation.'
     );
+
+    CREATE TABLE technique_value (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    country_id INTEGER NOT NULL,
+    sector_id INTEGER NOT NULL,
+    technique_id INTEGER NOT NULL,
+    technique_type TEXT NOT NULL, -- 'fake_news' or 'counter_fake'
+    value INTEGER NOT NULL,
+    FOREIGN KEY (country_id) REFERENCES countries(id),
+    FOREIGN KEY (sector_id) REFERENCES sectors(id),
+    FOREIGN KEY (technique_id) REFERENCES techniques(id)
+);

@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.db import connection
 from django.http import JsonResponse
-
+from django.shortcuts import render, redirect
+from .models import Post
+from .forms import PostForm
 
 def home(request):
     return render(request, 'home.html')
@@ -98,3 +100,26 @@ def insert_data(request):
     }
 
     return render(request, "insert_data.html", context)
+
+def insert_data(request):
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('posts')
+    else:
+        form = PostForm()
+    # Pass selection lists to template if needed
+    return render(request, "insert_data.html", {"form": form})
+
+def posts(request):
+    all_posts = Post.objects.all()
+    return render(request, "posts.html", {"posts": all_posts})
+
+
+# Other view functions...
+
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    return redirect('posts')
