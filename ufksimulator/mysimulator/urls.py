@@ -8,5 +8,4 @@ urlpatterns = [
     path('insert-data/', views.insert_data, name='insert_data'),
     path('check-parliament/', views.check_parliament, name='check_parliament'),
     path('country-parliament/', views.country_parliament, name='country_parliament'),  # Add this line
-    path('posts/', views.posts, name='posts'),
 ]
