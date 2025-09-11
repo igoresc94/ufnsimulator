@@ -7,21 +7,21 @@
 
 <h2>Posts</h2>
 {% for post in posts %}
-    <div>
-        <strong>Country:</strong> {{ post.country }}<br>
-        <strong>Sector:</strong> {{ post.sector }}<br>
-        <strong>Fake News:</strong> {{ post.fake_news_technique }}<br>
-        <strong>Counter Technique:</strong> {{ post.counter_fake_news_technique }}<br>
-        <strong>Description:</strong> {{ post.description }}<br>
-        {% if post.image %}
-            <img src="{{ post.image.url }}" width="100" /><br>
-        {% endif %}
-        <form method="POST" action="{% url 'delete_post' post.id %}">
-            {% csrf_token %}
-            <input type="submit" value="Delete">
-        </form>
-        <hr>
-    </div>
+  <div>
+    <p><strong>Country:</strong> {{ post.country.name }}</p>
+    <p><strong>Sector:</strong> {{ post.sector.name }}</p>
+    <p><strong>Fake News:</strong> {{ post.fake_news_technique.name }}</p>
+    <p><strong>Counter Technique:</strong> {{ post.counter_fake_news_technique.name }}</p>
+    <p><strong>Description:</strong> {{ post.description }}</p>
+    {% if post.image %}
+      <img src="{{ post.image.url }}" width="100" alt="Post Image">
+    {% endif %}
+    <form method="POST" action="{% url 'delete_post' post.id %}">
+      {% csrf_token %}
+      <button type="submit">Delete</button>
+    </form>
+    <hr>
+  </div>
 {% endfor %}
 
 {% endblock %}

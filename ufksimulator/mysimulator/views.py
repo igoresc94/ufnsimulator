@@ -1,18 +1,61 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connection
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from .models import Post
 from .forms import PostForm
 
+
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'index.html')
+
 
 def about(request):
     return render(request, 'about.html')
 
+
+def fetch_data_from_db(query):
+    """ Helper function to execute raw SQL queries and return results as dictionaries """
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+
 def insert_data(request):
-    return render(request, 'insert_data.html')
+    countries = fetch_data_from_db("SELECT id, name FROM EU_Countries;")
+    sectors = fetch_data_from_db("SELECT id, name FROM Sectors;")
+    fake_news_techniques = fetch_data_from_db("SELECT id, name FROM Fake_News_Techniques;")
+    counter_disinfo_techniques = fetch_data_from_db("SELECT id, name FROM Counter_Disinfo_Techniques;")
+
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('posts')
+    else:
+        form = PostForm()
+
+    context = {
+        "form": form,
+        "countries": countries,
+        "sectors": sectors,
+        "fake_news_techniques": fake_news_techniques,
+        "counter_disinfo_techniques": counter_disinfo_techniques,
+    }
+
+    return render(request, "insert_data.html", context)
+
+
+def posts(request):
+    all_posts = Post.objects.all()
+    return render(request, "posts.html", {"posts": all_posts})
+
+
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    return redirect('posts')
+
 
 def eu_parliament(request):
     with connection.cursor() as cursor:
@@ -21,7 +64,6 @@ def eu_parliament(request):
         """)
         raw_parties = cursor.fetchall()
 
-    # Mapeamento dos nomes para versões legíveis
     name_mapping = {
         "GUE_NGL": "The Left in the European Parliament - GUE/NGL",
         "S_D": "Progressive Alliance of Socialists & Democrats - S&D",
@@ -33,27 +75,24 @@ def eu_parliament(request):
         "NI": "Non-Inscrits - NI",
     }
 
-    # Substituir nomes conforme o dicionário
     parties = [(name_mapping.get(name, name), seats) for name, seats in raw_parties]
 
     return render(request, 'eu_parliament.html', {'parties': parties})
 
 
 def check_parliament(request):
-    # Fetch EU countries directly from the database
     with connection.cursor() as cursor:
         cursor.execute("SELECT id, name FROM EU_Countries ORDER BY name;")
         countries = [{'id': row[0], 'name': row[1]} for row in cursor.fetchall()]
-    
+
     return render(request, 'check_parliament.html', {'countries': countries})
 
+
 def country_parliament(request):
-    # Fetch data based on the selected country_id passed from JavaScript
     country_id = request.GET.get('country_id')
     if not country_id:
-        return JsonResponse([])  # Return an empty response if no country_id is selected
-    
-    # Query the parliament seats for the selected country
+        return JsonResponse([])
+
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT ps.epp, ps.s_d, ps.renew_europe, ps.greens_ale, ps.ecr, ps.gue_ngl, ps.ni, ps.total_seats, c.name
@@ -63,7 +102,6 @@ def country_parliament(request):
         """, [country_id])
         result = cursor.fetchall()
 
-    # Return the data as JSON
     if result:
         return JsonResponse([{
             'party_name': row[8],  # country name
@@ -78,48 +116,3 @@ def country_parliament(request):
         } for row in result], safe=False)
     else:
         return JsonResponse({"error": "No data found"}, status=404)
-
-def fetch_data_from_db(query):
-    """ Helper function to execute raw SQL queries and return results as dictionaries """
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-def insert_data(request):
-    countries = fetch_data_from_db("SELECT id, name FROM EU_Countries;")
-    sectors = fetch_data_from_db("SELECT id, name FROM Sectors;")
-    fake_news_techniques = fetch_data_from_db("SELECT id, name FROM Fake_News_Techniques;")
-    counter_disinfo_techniques = fetch_data_from_db("SELECT id, name FROM Counter_Disinfo_Techniques;")
-
-    context = {
-        "countries": countries,
-        "sectors": sectors,
-        "fake_news_techniques": fake_news_techniques,
-        "counter_disinfo_techniques": counter_disinfo_techniques,
-    }
-
-    return render(request, "insert_data.html", context)
-
-def insert_data(request):
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('posts')
-    else:
-        form = PostForm()
-    # Pass selection lists to template if needed
-    return render(request, "insert_data.html", {"form": form})
-
-def posts(request):
-    all_posts = Post.objects.all()
-    return render(request, "posts.html", {"posts": all_posts})
-
-
-# Other view functions...
-
-def delete_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    post.delete()
-    return redirect('posts')
