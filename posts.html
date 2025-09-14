@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+
+<header>Posts</header>
+<div class="separatebutton">
+    <a href="{% url 'home' %}" class="btn">Back to Home</a>
+</div>
+
+{% if posts %}
+    {% for post in posts %}
+        <div style="margin-bottom: 24px;">
+            <p><strong>Country:</strong> {{ post.country }}</p>
+            <p><strong>Disinformation / Tackling Disinformation Technique:</strong> {{ post.disinfo_technique }}</p>
+            <p><strong>Description:</strong> {{ post.description }}</p>
+            {% if post.image_url %}
+                <img src="{{ post.image_url }}" alt="Uploaded Image" width="200" />
+            {% endif %}
+            
+            <!-- Individual delete button (trash can) -->
+            <form method="POST" action="{% url 'delete_single_post' forloop.counter0 %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="button" onclick="document.getElementById('pwbox-{{ forloop.counter0 }}').style.display='inline';this.style.display='none';" title="Delete" style="background:none;border:none;cursor:pointer;font-size:20px;">
+                    🗑️
+                </button>
+                <span id="pwbox-{{ forloop.counter0 }}" style="display: none;">
+                    <input type="password" name="password" placeholder="Password" style="width:110px">
+                    <button type="submit">OK</button>
+                </span>
+            </form>
+            <hr>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No posts yet.</p>
+{% endif %}
+
+{% endblock %}

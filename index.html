@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<header>UFN Simulator</header>
+
+    <h1>Welcome to the Understanding Fake News Simulator!</h1>
+    <h2>Please choose one of the following options to continue</h2>
+
+
+    <nav>
+        <a href="{% url 'about' %}"  class="btn">About</a> |
+        <a href="{% url 'eu_parliament' %}" class="btn">EU Parliament</a> |
+        <a href="{% url 'insert_data' %}"  class="btn">Play with data</a> |
+        <a href="{% url 'check_parliament' %}"  class="btn">Check your Member State parliament</a>|
+        <a href="{% url 'posts' %}"  class="btn">Posts</a>
+    </nav>
+{% endblock %}

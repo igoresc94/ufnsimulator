@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Delete All Posts</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="password">Enter password to confirm:</label>
+    <input type="password" name="password" id="password" required>
+    <button type="submit">Delete All</button>
+  </form>
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
+{% endblock %}

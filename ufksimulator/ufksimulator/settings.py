@@ -60,7 +60,7 @@ ROOT_URLCONF = "ufksimulator.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / "mysimulator/templates"],  # Add this line
+        'DIRS': [BASE_DIR / "/Users/igoresc94/Downloads/ufnsimulator"],  # Add this line
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

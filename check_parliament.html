@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Check Seats{% endblock %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/membertable.css' %}">
+    <title>EU Parliament Simulator</title>
+    <script>
+        function fetchParliament() {
+            let countryId = document.getElementById("countrySelect").value;
+            console.log("Selected Country ID:", countryId); // Check if it's passing the correct ID.
+            if (!countryId) return;
+    
+            fetch(`/country-parliament/?country_id=${encodeURIComponent(countryId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    let resultsDiv = document.getElementById("parliamentResults");
+                    resultsDiv.innerHTML = "<h3>Previous Parliament Formation</h3>";
+    
+                    if (data.length === 0) {
+    resultsDiv.innerHTML += "<p>No data available.</p>";
+} else {
+    let table = "<table>";
+
+    // Header Row (Categories)
+    table += "<tr><th>Party Name</th>";
+    data.forEach(row => {
+        table += `<th>Number of Seats</th>`; // Each country becomes a column
+    });
+    table += "</tr>";
+
+    // Rows for each party
+    let parties = [
+        { key: "gue_ngl", name: "The Left in the European Parliament - GUE/NGL" },
+        { key: "s_d", name: "Progressive Alliance of Socialists & Democrats - S&D" },
+        { key: "greens_ale", name: "Greens/European Free Alliance - EFA" },
+        { key: "epp", name: "European People's Party - EPP" },
+        { key: "renew_europe", name: "Renew Europe" },
+        { key: "ecr", name: "European Conservatives and Reformists - ECR" },
+        { key: "ni", name: "Identity and Democracy - NI" },
+        { key: "total_seats", name: "Total Seats" }
+    ];
+
+    parties.forEach(party => {
+        table += `<tr><td>${party.name}</td>`;
+        data.forEach(row => {
+            table += `<td>${row[party.key]}</td>`; // Insert values per country
+        });
+        table += "</tr>";
+    });
+
+    table += "</table>";
+    resultsDiv.innerHTML += table;
+}
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
+    </script>
+</head>
+<header>Check Member State Parliament Distribution</header>
+
+<div class="separatebutton">
+    <a href="{% url 'home' %}" class="btn">Back to Home</a> |
+    <a href="{% url 'eu_parliament' %}"class="btn">Check EU parliament</a>
+</div>
+
+    
+    <div class="separatebutton">
+        <label for="countrySelect">Select a Member State:</label>
+ 
+        <select id="countrySelect" onchange="fetchParliament()">
+            <option value="">-- Select a Country --</option>
+            {% for country in countries %}
+                <option value="{{ country.id }}">{{ country.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+
+    <div id="parliamentResults">
+        <!-- This div will be populated with the parliament data -->
+    </div>
+ 
+    {% endblock %}
+
