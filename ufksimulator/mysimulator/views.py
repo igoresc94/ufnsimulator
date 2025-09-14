@@ -14,7 +14,7 @@ from django.conf import settings
 temporary_posts = []
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'index.html')
 
 def about(request):
     return render(request, 'about.html')
