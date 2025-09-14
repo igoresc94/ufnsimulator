@@ -1,74 +1,96 @@
 {% extends 'base.html' %}
-{% load static %}
-
 {% block title %}Insert Data{% endblock %}
 
 {% block content %}
 
-<body>
-    <header>Play with Data</header>
-<div class="separatebutton">
+<style>
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-btn {
+    border: none;
+    background: #ccc;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-weight: bold;
+    cursor: default;
+    padding: 0;
+    margin-left: 5px;
+  }
+
+  .tooltip-text {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* show above */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    width: max-content;
+    max-width: 200px;
+    font-size: 12px;
+    pointer-events: none; /* so tooltip doesn't block mouse */
+  }
+
+  .tooltip-container:hover .tooltip-text,
+  .tooltip-container:focus-within .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
+
+    <header>Insert Posts</header>
+
+       <div class="separatebutton">
     <a href="{% url 'home' %}" class="btn">Back to Home</a>
 </div>
 
-    <h2>Insert Fake News Impact Data</h2>
+<form method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
+    {% csrf_token %}
+     <label for="country">Country:</label><br>
+    <input type="text" id="country" name="country" placeholder="Enter country">
+<span class="tooltip-container">
+  <button type="button" class="tooltip-btn" aria-label="Country options" tabindex="-1">?</button>
+  <span class="tooltip-text">Write a EU country: Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hongary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden</span>
+</span>
 
-    <form method="POST">
-        {% csrf_token %}
+<br><br>
 
-        <label for="country">Select Country:</label>
-        <select id="country" name="country">
-            <option value="">-- Select a Country --</option>
-            {% for country in countries %}
-                <option value="{{ country.id }}">{{ country.name }}</option>
-            {% endfor %}
-        </select>
+    <label for="disinfo_technique">Disinformation / Tackling Disinformation Technique:</label><br>
+    <input type="text" id="disinfo_technique" name="disinfo_technique" placeholder="Enter technique">
+<span class="tooltip-container">
+  <button type="button" class="tooltip-btn" aria-label="Dinsinformation techniques" tabindex="-1">?</button>
+  <span class="tooltip-text">Disinformation Techniques: Conspiracy Theories, Demonisation of groups, Falsification of statements, Disinformation about laws and policies, Use of Out-of-Context Images, Falsification of Documents and Fabricated Scandals, Clickbait and Sensationalist Headlines, Bots and Automated Campaigns</span>
+</span>
 
-        <br><br>
-
-        <label for="sector">Select Sector:</label>
-        <select id="sector" name="sector">
-            <option value="">-- Select a Sector --</option>
-            {% for sector in sectors %}
-                <option value="{{ sector.id }}">{{ sector.name }}</option>
-            {% endfor %}
-        </select>
-
-        <br><br>
-
-        <label for="fake_news">Select Fake News Technique:</label>
-        <select id="fake_news" name="fake_news">
-            <option value="">-- Select a Fake News Technique --</option>
-            {% for technique in fake_news_techniques %}
-                <option value="{{ technique.id }}">{{ technique.name }}</option>
-            {% endfor %}
-        </select>
-
-        <br><br>
-
-        <label for="counter_fake_news">Select Counter Fake News Technique:</label>
-        <select id="counter_fake_news" name="counter_fake_news">
-            <option value="">-- Select a Counter Fake News Technique --</option>
-            {% for counter_technique in counter_disinfo_techniques %}
-                <option value="{{ counter_technique.id }}">{{ counter_technique.name }}</option>
-            {% endfor %}
-        </select>
-
-        <br><br>
+<span class="tooltip-container">
+  <button type="button" class="tooltip-btn" aria-label="Tackling techniques" tabindex="-1">?</button>
+    <span class="tooltip-text">Techniques to tackle disinformation:Media Literacy and Fact-Checking, Regulation of Social Media, Laws Against Hate Speech, Partnerships Between Leaders, Public Awareness Campaigns, Demonetization of Disinformers, Rapid Responses from Organizations and Authorities, Active Moderation and Artificial Intelligences, Algorithm Transparency</span>
+</span>
 
 
-    <label for="description">Description:</label>
+    <br><br>
+
+    <label for="description">Description:</label><br>
     <textarea id="description" name="description" rows="4" cols="50" placeholder="Write your text here..."></textarea>
+
     <br><br>
 
-    <label for="image">Upload an Image:</label>
+    <label for="image">Upload an Image:</label><br>
     <input type="file" id="image" name="image" accept="image/*">
+    
     <br><br>
 
-        <button type="submit" class="btn">Submit</button>
-    </form>
-
-</body>
-
+    <button type="submit">Submit</button>
+</form>
 {% endblock %}
 

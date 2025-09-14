@@ -1,6 +1,30 @@
 
 from django.db import models
 
+class Country(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+    
+class Sector(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+
+class FakeNewsTechnique(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+
+class CounterDisinfoTechnique(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+
 class EU_Countries(models.Model):
     id = models.AutoField(primary_key=True)  # Ensure this matches your DB schema
     name = models.CharField(max_length=255, unique=True)
@@ -28,10 +52,10 @@ class EU_Parliament_Seats(models.Model):
         db_table = "EU_Parliament_Seats"
 
 class Post(models.Model):
-    country = models.CharField(max_length=100)
-    sector = models.CharField(max_length=100)
-    fake_news_technique = models.CharField(max_length=100)
-    counter_fake_news_technique = models.CharField(max_length=100)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
+    fake_news_technique = models.ForeignKey(FakeNewsTechnique, on_delete=models.CASCADE)
+    counter_fake_news_technique = models.ForeignKey(CounterDisinfoTechnique, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
